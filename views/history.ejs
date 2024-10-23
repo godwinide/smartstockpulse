@@ -74,7 +74,7 @@
                                 <a href="account_upgrade"><i class="fa fa-arrow-up"></i><span>Account Upgrade</span></a>
                             </li>
                             <li class="active">
-                                <a href="trade_history"><i class="fa fa-bar-chart"></i><span>Trade History</span></a>
+                                <a href="/history"><i class="fa fa-bar-chart"></i><span>Trade History</span></a>
                             </li>
                             <li class="">
                                 <a href="profile"><i class="fa fa-user"></i><span>Profile</span></a>
@@ -124,7 +124,7 @@
                     </div>
                     <div class="col-sm-6 clearfix">
                         <div class="user-profile pull-right">
-                            <h4 class="user-name">John Doe</h4>
+                            <h4 class="user-name"><%= req.user.fullname %></h4>
                         </div>
                     </div>
                 </div>
@@ -148,8 +148,17 @@
                       <th>STATUS</th>
                     </tr>
                   </thead>
-                  <tbody>
-                                      </tbody>
+                    <tbody>
+                        <% history.map(h => {%>
+                            <tr>
+                                <td><%= h.id.slice(10)%></td>
+                                <td><%= new Date(h.date).toDateString() %></td>
+                                <td><%= new Date(h.date).toLocaleTimeString() %></td>
+                                <td><%= h.amount %></td>
+                                <td><%= h.status %></td>
+                            </tr>
+                        <%})%>
+                    </tbody>
                 </table>
                     </div>
                   </div>

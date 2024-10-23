@@ -106,7 +106,7 @@
                         <div class="image img-cir img-120">
                             <img src="/images/icon/avatar-big-01.jpg" alt="John Doe" />
                         </div>
-                        <h4 class="name">john doe</h4>
+                        <h4 class="name">Admin</h4>
                         <a href="/admin/signout">Sign out</a>
                     </div>
                     <nav class="navbar-sidebar2">
@@ -190,7 +190,7 @@
 
             <section>
                 <div class="table-responsive m-b-40">
-                    <h3>Recent 10 Transactions</h3>
+                    <h3>Recent Transactions</h3>
                     <table class="table table-borderless table-data3">
                         <thead>
                             <tr>
@@ -198,21 +198,25 @@
                                 <th>type</th>
                                 <th>account</th>
                                 <th>amount</th>
+                                <th>action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <%history.map(h=> {%>
+                            <%history.reverse().map(h=> {%>
                                 <tr>
-                                    <td>
-                                        <%=h.date%>
-                                    </td>
+                                    <td><%= new Date(h.date).toDateString() %></td>
+
                                     <td>
                                         <%=h.type%>
                                     </td>
                                     <td>
-                                        <%=h.account%>
+                                        <%=h.user.fullname%>
                                     </td>
                                     <td>$<%=h.amount.toFixed(2)%>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-success p-1" href="/admin/approve-withdrawal/<%=h._id%>">Approve</a>
+                                        <a class="btn btn-danger p-1" href="/admin/reject-withdrawal/<%= h._id%>">Reject</a>
                                     </td>
                                 </tr>
                                 <%})%>

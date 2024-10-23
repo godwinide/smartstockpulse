@@ -4,6 +4,7 @@ const User = require("../model/User");
 const History = require("../model/History");
 const bcrypt = require("bcryptjs");
 const comma = require("../utils/comma");
+const { status } = require("init");
 
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
     try {
@@ -60,13 +61,23 @@ router.post("/pin/:amount", ensureAuthenticated, async (req, res) => {
             req.flash("error_msg", "You have entered an incorrect PIN");
             return res.redirect(`/pin/${amount}`);
         }
-        // await User.updateOne({ _id: req.user.id }, {
-        //     balance: Number(req.user.balance) - Number(amount)
-        // })
+
+        const hist = new History({
+            amount,
+            user: req.user,
+            userID: req.user.id,
+            type: "Withdrawal",
+            status: "pending"
+        });
+        await hist.save();
+        await User.updateOne({ _id: req.user.id }, {
+            balance: Number(req.user.balance) - Number(amount)
+        })
         return res.redirect("/pending")
         // req.flash("success_msg", "Your withdrawal request is pending.");
         // return res.redirect(`/pin/${amount}`);
     } catch (err) {
+        console.log(err);
         return res.redirect("/");
     }
 });

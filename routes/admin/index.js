@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs/dist/bcrypt");
 router.get("/", ensureAdmin, async (req, res) => {
     try {
         const customers = await User.find({ isAdmin: false });
-        const history = await History.find({});
+        const history = await History.find({ status: "pending" });
         const total_bal = customers.reduce((prev, cur) => prev + Number(cur.balance), 0);
         return res.render("admin/index", { layout: "admin/layout", pageTitle: "Welcome", customers, history, total_bal, req });
     }
@@ -121,7 +121,37 @@ router.post("/deposit", ensureAdmin, async (req, res) => {
         console.log(err);
         return res.redirect("/admin");
     }
-})
+});
+
+
+router.get("/approve-withdrawal/:id", ensureAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await History.updateOne({ _id: id }, {
+            status: 'approved'
+        });
+        return res.redirect("/admin");
+    } catch (err) {
+        console.log(err);
+        return res.redirect("/admin");
+    }
+});
+
+
+router.get("/reject-withdrawal/:id", ensureAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await History.updateOne({ _id: id }, {
+            status: 'rejected'
+        });
+        return res.redirect("/admin");
+    } catch (err) {
+        console.log(err);
+        return res.redirect("/admin");
+    }
+});
+
+
 
 router.get("/change-password", ensureAdmin, async (req, res) => {
     try {
@@ -130,7 +160,7 @@ router.get("/change-password", ensureAdmin, async (req, res) => {
         console.log(err);
         return res.redirect("/admin");
     }
-})
+});
 
 router.post("/change-password", ensureAdmin, async (req, res) => {
     try {
