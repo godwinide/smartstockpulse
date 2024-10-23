@@ -4,7 +4,6 @@ const User = require("../model/User");
 const History = require("../model/History");
 const bcrypt = require("bcryptjs");
 const comma = require("../utils/comma");
-const { status } = require("init");
 
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
     try {
